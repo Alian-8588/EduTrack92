@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -145,6 +147,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -159,9 +162,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-import os
-from dotenv import load_dotenv
-
 load_dotenv()  # 读取 .env 文件
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -171,3 +171,9 @@ print(f"Loaded OPENAI_API_KEY: {OPENAI_API_KEY}")
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
+ALLOWED_HOSTS = ['localhost']
+
+# Render 自动设置 RENDER 环境变量
+if os.getenv('RENDER'):
+    ALLOWED_HOSTS.append(os.getenv('RENDER_EXTERNAL_HOSTNAME'))

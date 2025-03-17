@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: edutrack92-web
+    env: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn edutrack.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: edutrack.settings
+      - key: DEBUG
+        value: 'False'
