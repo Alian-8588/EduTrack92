@@ -171,9 +171,3 @@ print(f"Loaded OPENAI_API_KEY: {OPENAI_API_KEY}")
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-
-ALLOWED_HOSTS = ['localhost']
-
-# Render 自动设置 RENDER 环境变量
-if os.getenv('RENDER'):
-    ALLOWED_HOSTS.append(os.getenv('RENDER_EXTERNAL_HOSTNAME'))
