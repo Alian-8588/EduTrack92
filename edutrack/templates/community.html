@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="text-center mb-4">💬 Study Groups</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    📚 All Groups
+                </div>
+                <ul id="all-groups" class="list-group list-group-flush">
+                    <!-- Dynamically filled with all groups -->
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    ✅ Joined Groups
+                </div>
+                <ul id="joined-groups" class="list-group list-group-flush">
+                    <!-- Dynamically filled with joined groups -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/app.js' %}"></script>
+{% endblock %}

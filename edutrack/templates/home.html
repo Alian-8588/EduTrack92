@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="text-center mt-5">
+    <h1 class="mb-3">🎓 Welcome to <span class="text-primary">EduTrack92</span></h1>
+    <p class="lead mb-4">Please select a module to begin:</p>
+
+    <div class="list-group mx-auto shadow rounded" style="max-width: 400px;">
+        <a href="{% url 'learning_hub' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+            📚 <span class="ms-2">Learning Hub</span>
+        </a>
+        <a href="{% url 'community' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+            💬 <span class="ms-2">Community</span>
+        </a>
+        <a href="{% url 'user_center' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+            👤 <span class="ms-2">User Center</span>
+        </a>
+        <a href="{% url 'analytics' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+            📊 <span class="ms-2">Data & Analytics</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

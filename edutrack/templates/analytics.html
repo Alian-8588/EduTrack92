@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h2>📊 学习数据分析</h2>
+<p id="summary">加载中...</p>
+
+<canvas id="progressChart" width="400" height="200"></canvas>
+<canvas id="pieChart" width="400" height="200"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/analytics.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="text-center mb-4">👤 User Center</h2>
+    <div class="card shadow-sm mx-auto" style="max-width: 500px;">
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    📄 Current User: <strong>{{ request.user.username }}</strong>
+                </li>
+                <li class="list-group-item">
+                    <a href="{% url 'password_change' %}" class="btn btn-outline-primary w-100 my-1">
+                        📝 Change Password
+                    </a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger w-100 my-1">
+                        🔒 Log Out
+                    </a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{% url 'faq' %}" class="btn btn-outline-info w-100 my-1">
+                        ❓ FAQ
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
