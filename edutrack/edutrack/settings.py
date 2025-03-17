@@ -131,3 +131,10 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Optional: remove debug print for production
 # print(f"Loaded OPENAI_API_KEY: {OPENAI_API_KEY}")
+
+# 告诉 Django 使用 /accounts/login/ 作为登录跳转地址
+LOGIN_URL = '/accounts/login/'
+
+# Session 有效期设置（1小时有效，自动刷新）
+SESSION_COOKIE_AGE = 3600  # 单位秒，1小时
+SESSION_SAVE_EVERY_REQUEST = True  # 每次请求刷新 Session
