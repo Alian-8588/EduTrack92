@@ -243,7 +243,7 @@ async function authorizedFetch(url, options = {}) {
             response = await fetch(url, options);
         } else {
             alert("Session expired, please log in again.");
-            window.location.href = '/login';
+            window.location.href = '/accounts/login/';
         }
     }
     return response;
@@ -262,8 +262,13 @@ async function refreshToken() {
     if (res.ok) {
         const data = await res.json();
         localStorage.setItem('access', data.access);
+        if (data.refresh) {
+            localStorage.setItem('refresh', data.refresh);  // ⬅️ 新增：保存新 refresh token
+        }
         return true;
     } else {
+        localStorage.removeItem('access');
+        localStorage.removeItem('refresh');
         return false;
     }
 }
@@ -271,5 +276,9 @@ async function refreshToken() {
 function logout() {
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
-    window.location.href = '/login';
+    window.location.href = '/accounts/login/';
 }
+
+setInterval(async () => {
+    await refreshToken();  // 每 25 分钟自动刷新 access token
+}, 25 * 60 * 1000);
