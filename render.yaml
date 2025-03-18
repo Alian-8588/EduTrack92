@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: edutrack92
-    env: python
-    buildCommand: |
-      pip install -r requirements.txt
-      python manage.py collectstatic --noinput
-    startCommand: gunicorn edutrack.wsgi:application --bind 0.0.0.0:$PORT

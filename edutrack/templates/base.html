@@ -17,6 +17,11 @@
     {% endblock %}
 </div>
 
+<!-- ✅ 隐藏表单：注入 CSRF Token -->
+<form style="display: none;">
+    {% csrf_token %}
+</form>
+
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'js/app.js' %}"></script>
 </body>

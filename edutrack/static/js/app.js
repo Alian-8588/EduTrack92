@@ -1,62 +1,47 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const registerForm = document.getElementById('register-form');
-    const loginForm = document.getElementById('login-form');
-
-    if (registerForm) {
-        registerForm.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const formData = new FormData(registerForm);
-            const data = {
-                username: formData.get('username'),
-                email: formData.get('email'),
-                password: formData.get('password')
-            };
-            const response = await fetch('/api/register/', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
-            if (response.ok) {
-                localStorage.setItem('access', result.access);
-                localStorage.setItem('refresh', result.refresh);
-                document.getElementById('register-result').innerText = 'Registration successful!';
-                window.location.href = '/dashboard';
-            } else {
-                document.getElementById('register-result').innerText = result.detail || JSON.stringify(result) || 'Registration failed';
-            }
-        });
-    }
-
-    if (loginForm) {
-        loginForm.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const formData = new FormData(loginForm);
-            const data = {
-                username: formData.get('username'),
-                password: formData.get('password')
-            };
-            const response = await fetch('/api/token/', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
-            if (response.ok) {
-                localStorage.setItem('access', result.access);
-                localStorage.setItem('refresh', result.refresh);
-                document.getElementById('login-result').innerText = 'Login successful!';
-                window.location.href = '/dashboard';
-            } else {
-                document.getElementById('login-result').innerText = result.detail || JSON.stringify(result) || 'Login failed';
-            }
-        });
-    }
-
     loadCourseOptions();
     loadGoals();
     loadStudyGroups();
 });
+
+function getCSRFToken() {
+    const name = 'csrftoken';
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '=')) {
+            return decodeURIComponent(cookie.slice(name.length + 1));
+        }
+    }
+    return '';
+}
+
+async function authorizedFetch(url, options = {}) {
+    const csrfToken = getCSRFToken();
+
+    if (!options.headers) {
+        options.headers = {};
+    }
+
+    // 对非GET请求加CSRF Token和Content-Type
+    if (!options.method || options.method.toUpperCase() !== 'GET') {
+        options.headers['X-CSRFToken'] = csrfToken;
+        if (!options.headers['Content-Type']) {
+            options.headers['Content-Type'] = 'application/json';
+        }
+    }
+
+    // 确保发送 cookie
+    options.credentials = 'same-origin';
+
+    const response = await fetch(url, options);
+
+    if (response.status === 403) {
+        alert("Forbidden: You might be logged out or CSRF token missing.");
+    }
+
+    return response;
+}
 
 async function loadStudyGroups() {
     const allList = document.getElementById('all-groups');
@@ -175,7 +160,6 @@ document.getElementById('goal-form')?.addEventListener('submit', async function 
 
     const res = await authorizedFetch('/api/courses/goals/create/', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({course: courseId, progress: 0.0})
     });
 
@@ -196,7 +180,6 @@ document.getElementById('progress-form')?.addEventListener('submit', async funct
 
     const res = await authorizedFetch(`/api/courses/goals/${goalId}/`, {
         method: 'PATCH',
-        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({progress: progress})
     });
 
@@ -229,47 +212,6 @@ document.getElementById('recommend-btn')?.addEventListener('click', async functi
     }
 });
 
-async function authorizedFetch(url, options = {}) {
-    let token = localStorage.getItem('access');
-    if (!options.headers) options.headers = {};
-    options.headers['Authorization'] = `Bearer ${token}`;
-
-    let response = await fetch(url, options);
-    if (response.status === 401) {
-        const refreshed = await refreshToken();
-        if (refreshed) {
-            token = localStorage.getItem('access');
-            options.headers['Authorization'] = `Bearer ${token}`;
-            response = await fetch(url, options);
-        } else {
-            alert("Session expired, please log in again.");
-            window.location.href = '/login';
-        }
-    }
-    return response;
-}
-
-async function refreshToken() {
-    const refresh = localStorage.getItem('refresh');
-    if (!refresh) return false;
-
-    const res = await fetch('/api/token/refresh/', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({refresh})
-    });
-
-    if (res.ok) {
-        const data = await res.json();
-        localStorage.setItem('access', data.access);
-        return true;
-    } else {
-        return false;
-    }
-}
-
 function logout() {
-    localStorage.removeItem('access');
-    localStorage.removeItem('refresh');
-    window.location.href = '/accounts/login/';
+    window.location.href = '/accounts/logout/';
 }

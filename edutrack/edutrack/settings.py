@@ -9,9 +9,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = "django-insecure-3qz!y+#siol#gqhs@_ew)9hn(@xt4(yjeo49a4dx)vhu6%%8b9"
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["edutrack92.onrender.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -122,16 +122,8 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',  # 加在前面
     ),
-}
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),    # Access token 30分钟有效
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),      # Refresh token 30天有效
-    'ROTATE_REFRESH_TOKENS': True,                    # 刷新时换新的 refresh token
-    'BLACKLIST_AFTER_ROTATION': False,                # 允许旧 token 使用
-    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
 # Load environment variables
